@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Mariya Shijo — Frontend Developer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Mariya Shijo — Frontend developer building thoughtful web experiences. Based in NJ / NYC." />
+
+  <!-- Code-referenced resources (loaded as window.__resources.<id> at runtime) -->
+  <meta name="ext-resource-dependency" content="assets/ats-dashboard.png" data-resource-id="atsDashboard" />
+  <meta name="ext-resource-dependency" content="assets/Mariya Shijo - Resume.pdf" data-resource-id="resume" />
+
+  <!-- Splash thumbnail shown while bundle unpacks / when JS disabled -->
+  <template id="__bundler_thumbnail" data-bg-color="#1f1419">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#1f1419" />
+      <!-- Pink pixel disintegration cluster, upper-left -->
+      <g fill="#ff4d8d">
+        <rect x="120" y="180" width="48" height="48" />
+        <rect x="168" y="180" width="48" height="48" />
+        <rect x="216" y="180" width="48" height="48" />
+        <rect x="264" y="180" width="48" height="48" />
+        <rect x="120" y="228" width="48" height="48" />
+        <rect x="168" y="228" width="48" height="48" />
+        <rect x="216" y="228" width="48" height="48" />
+        <rect x="264" y="228" width="48" height="48" />
+        <rect x="312" y="228" width="48" height="48" />
+        <rect x="120" y="276" width="48" height="48" />
+        <rect x="168" y="276" width="48" height="48" />
+        <rect x="216" y="276" width="48" height="48" />
+        <rect x="264" y="276" width="48" height="48" />
+        <rect x="120" y="324" width="48" height="48" />
+        <rect x="168" y="324" width="48" height="48" />
+        <rect x="216" y="324" width="48" height="48" />
+        <rect x="360" y="180" width="36" height="36" opacity="0.6" />
+        <rect x="396" y="240" width="28" height="28" opacity="0.4" />
+        <rect x="430" y="290" width="24" height="24" opacity="0.3" />
+        <rect x="380" y="340" width="32" height="32" opacity="0.5" />
+        <rect x="90" y="380" width="28" height="28" opacity="0.35" />
+        <rect x="200" y="400" width="22" height="22" opacity="0.25" />
+      </g>
+      <!-- Initials -->
+      <text x="600" y="500" text-anchor="middle"
+            font-family="Instrument Serif, Times New Roman, serif"
+            font-size="280" font-style="italic" fill="#f8ecec">M</text>
+      <text x="600" y="640" text-anchor="middle"
+            font-family="IBM Plex Mono, ui-monospace, monospace"
+            font-size="22" letter-spacing="6" fill="#f8ecec80">MARIYA SHIJO</text>
+    </svg>
+  </template>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Italiana&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+  <style>
+    html, body, #root { margin: 0; padding: 0; height: 100%; }
+    body { font-family: "Geist", system-ui, -apple-system, sans-serif; background: #1f1419; }
+    * { box-sizing: border-box; }
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="tokens.jsx"></script>
+  <script type="text/babel" src="direction-2-detail.jsx"></script>
+  <script type="text/babel" src="direction-2-kinetic.jsx"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Hook: track whether the viewport is "mobile" sized.
+    function useIsMobile(breakpoint = 768) {
+      const [isMobile, setIsMobile] = useState(
+        typeof window !== 'undefined' ? window.innerWidth <= breakpoint : false
+      );
+      useEffect(() => {
+        const onResize = () => setIsMobile(window.innerWidth <= breakpoint);
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+      }, [breakpoint]);
+      return isMobile;
+    }
+
+    // Hook: read the project slug from location.hash (#/<slug>) and keep
+    // it in sync as the user navigates within the app.
+    function useHashRoute() {
+      const parse = () => {
+        const h = window.location.hash || '';
+        const m = h.match(/^#\/?([a-z0-9-]+)/i);
+        return m ? m[1] : null;
+      };
+      const [slug, setSlug] = useState(parse());
+      useEffect(() => {
+        const onHashChange = () => setSlug(parse());
+        window.addEventListener('hashchange', onHashChange);
+        return () => window.removeEventListener('hashchange', onHashChange);
+      }, []);
+      const navigate = (next) => {
+        if (next) window.location.hash = '#/' + next;
+        else if (window.location.hash) {
+          // Strip the hash without scrolling.
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+          setSlug(null);
+        }
+      };
+      return [slug, navigate];
+    }
+
+    function App() {
+      const tweaks = window.TWEAK_DEFAULTS;
+      const isMobile = useIsMobile();
+      const [slug, setSlug] = useHashRoute();
+
+      // Re-mount when slug changes from outside (back/forward) so the
+      // component's internal page state resets to the new initial.
+      return (
+        <DirectionKinetic
+          key={slug || 'landing'}
+          tweaks={tweaks}
+          initialPage={slug}
+          layout={isMobile ? 'mobile' : 'desktop'}
+          onNavigate={setSlug}
+        />
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
