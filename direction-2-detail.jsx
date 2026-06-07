@@ -72,6 +72,20 @@ const DirectionKineticDetail = ({ project, mode, accent, fp, onBack }) => {
     .pd-shot img { display:block; width: 100%; height: auto; border-radius: 8px; border: 1px solid ${t.borderSoft}; cursor: zoom-in; transition: transform .25s ease; }
     .pd-shot img:hover { transform: scale(1.01); }
     .pd-shot-empty { aspect-ratio: 16/9; display:flex; align-items: center; justify-content: center; background: ${t.surface}; border: 1px dashed ${t.border}; border-radius: 12px; color: ${t.fgDim}; font-family: ${fp.mono}; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+    .pd-shot { margin: 0; }
+    .pd-shot-cap { font-family: ${fp.mono}; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: ${t.fgMute}; margin: 0; white-space: nowrap; }
+
+    /* Grouped screenshot galleries */
+    .pd-shots-group + .pd-shots-group { margin-top: 46px; }
+    .pd-shots-group-title { display: flex; align-items: center; gap: 16px; font-family: ${fp.mono}; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: ${t.fgMute}; margin: 0 0 26px; }
+    .pd-shots-group-title::after { content: ''; flex: 1; height: 1px; background: ${t.borderSoft}; }
+
+    /* Phone device-frame gallery variant */
+    .pd-shots-grid.pd-shots-phone { grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 40px 28px; justify-items: center; }
+    .pd-shots-phone .pd-shot { background: transparent; border: none; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 232px; }
+    .pd-phone { position: relative; width: 100%; border-radius: 38px; padding: 9px; background: linear-gradient(155deg, #34343a 0%, #1b1b1f 55%, #0e0e10 100%); box-shadow: 0 30px 54px -26px rgba(0,0,0,.72), inset 0 0 0 1.5px rgba(255,255,255,.08); cursor: zoom-in; transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease; }
+    .pd-phone img { display: block; width: 100%; border-radius: 30px; }
+    .pd-phone:hover { transform: translateY(-7px); box-shadow: 0 40px 70px -28px rgba(0,0,0,.8), inset 0 0 0 1.5px rgba(255,255,255,.08); }
 
     /* Lightbox */
     .pd-lightbox { position: fixed; inset: 0; background: #00000099; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display:flex; align-items:center; justify-content:center; padding: 40px; z-index: 100; cursor: zoom-out; animation: pd-fade .18s ease both; }
@@ -154,47 +168,66 @@ const DirectionKineticDetail = ({ project, mode, accent, fp, onBack }) => {
         </div>
       </div>
 
-      {p.screenshots && p.screenshots.length > 0 && (
-        <div className="pd-shots">
-          <div className="pd-shots-head">
-            <h3>Screenshots</h3>
-            <div className="pd-shots-count">{p.screenshots.length} · click to enlarge</div>
-          </div>
-          <div className="pd-shots-grid">
-            {p.screenshots.map((src) => (
-              <div key={src} className="pd-shot">
-                <img src={src} alt={p.title + ' screenshot'} onClick={() => setZoom(src)} />
+      {(() => {
+        const phone = p.shotsLayout === 'phone';
+        const norm = (arr) => arr.map((s) => (typeof s === 'string' ? { src: s, label: null } : s));
+        const groups = p.shotGroups
+          ? p.shotGroups.map((g) => ({ title: g.title, shots: norm(g.shots) }))
+          : (p.screenshots && p.screenshots.length ? [{ title: null, shots: norm(p.screenshots) }] : null);
+
+        if (!groups) {
+          return (
+            <div className="pd-shots">
+              <div className="pd-shots-head">
+                <h3>Screenshots</h3>
+                <div className="pd-shots-count">drop images soon</div>
+              </div>
+              <div className="pd-shots-grid">
+                <div className="pd-shot"><div className="pd-shot-empty">[ project visuals · placeholder ]</div></div>
+                <div className="pd-shot"><div className="pd-shot-empty">[ project visuals · placeholder ]</div></div>
+              </div>
+            </div>
+          );
+        }
+
+        const total = groups.reduce((n, g) => n + g.shots.length, 0);
+        return (
+          <div className="pd-shots">
+            <div className="pd-shots-head">
+              <h3>Screenshots</h3>
+              <div className="pd-shots-count">{total} {phone ? 'screens' : ''} · click to enlarge</div>
+            </div>
+            {groups.map((g, gi) => (
+              <div key={gi} className="pd-shots-group">
+                {g.title && <p className="pd-shots-group-title">{g.title}</p>}
+                <div className={`pd-shots-grid ${phone ? 'pd-shots-phone' : ''}`}>
+                  {g.shots.map((s, i) => (
+                    <figure key={s.src + i} className="pd-shot">
+                      {phone ? (
+                        <div className="pd-phone" onClick={() => setZoom(s.src)}>
+                          <img src={s.src} alt={(s.label || p.title) + ' screenshot'} />
+                        </div>
+                      ) : (
+                        <img src={s.src} alt={(s.label || p.title) + ' screenshot'} onClick={() => setZoom(s.src)} />
+                      )}
+                      {s.label && <figcaption className="pd-shot-cap">{s.label}</figcaption>}
+                    </figure>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
+        );
+      })()}
 
-      {zoom && (
+      {zoom && ReactDOM.createPortal((
         <div className="pd-lightbox" onClick={() => setZoom(null)} role="dialog" aria-label="Enlarged screenshot">
           <img src={zoom} alt="Enlarged screenshot" onClick={(e) => e.stopPropagation()} />
           <button className="pd-lightbox-close" onClick={() => setZoom(null)} aria-label="Close">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M3 3l8 8M11 3l-8 8"/></svg>
           </button>
         </div>
-      )}
-
-      {(!p.screenshots || p.screenshots.length === 0) && (
-        <div className="pd-shots">
-          <div className="pd-shots-head">
-            <h3>Screenshots</h3>
-            <div className="pd-shots-count">drop images soon</div>
-          </div>
-          <div className="pd-shots-grid">
-            <div className="pd-shot">
-              <div className="pd-shot-empty">[ project visuals · placeholder ]</div>
-            </div>
-            <div className="pd-shot">
-              <div className="pd-shot-empty">[ project visuals · placeholder ]</div>
-            </div>
-          </div>
-        </div>
-      )}
+      ), document.body)}
     </div>
   );
 };

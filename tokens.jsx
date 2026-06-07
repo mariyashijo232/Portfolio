@@ -45,11 +45,18 @@ const CARD_LAYOUTS = ["asymmetric", "grid", "list"];
 // Work history — pulled from Mariya's April 2026 resume.
 const WORK_HISTORY = [
   {
+    role: "Application Development Intern",
+    company: "The International Girls Academy",
+    period: "Jun 2026 — Present",
+    location: "Hybrid · Newark, NJ",
+    summary: "Building and shipping application features for the academy's web platform — turning needs into clean, responsive front-end interfaces.",
+  },
+  {
     role: "Website Development Intern",
     company: "Innocuous AI",
-    period: "Feb 2025 — Jun 2026",
+    period: "Feb 2025 — May 2026",
     location: "Remote",
-    summary: "Building and updating pages for the Innocuous AI website in HTML, CSS, and Webflow — refining branding, sharpening UI/UX, and keeping the site fast and responsive.",
+    summary: "Contributed to the front-end of the Innocuous AI platform with HTML, CSS, JavaScript, and Django — building responsive, accessible interfaces and refining layouts, navigation, and branding elements for a consistent UI/UX.",
   },
   {
     role: "Junior Videographer / Social Media",
@@ -72,9 +79,9 @@ const PROJECTS = [
     tag: "Product",
     year: "2026",
     context: "Founding project · in progress",
-    badges: ["2026", "Wireframes", "Solo product lead"],
+    badges: ["2026", "Hi-fi flows", "Solo product lead"],
     blurb: "A credit-based platform where people trade the skills they have for the skills they need — tutoring, design help, fitness training, web work — without money in the loop.",
-    about: "SkillSync solves a simple problem: people need services they can't always afford, but everyone has something to offer in return. The platform matches members by what they can give and what they want to learn, handles the trade through a credit system, and keeps sessions safe and easy to schedule. Currently in wireframe and flow-design.",
+    about: "SkillSync solves a simple problem: people need services they can't always afford, but everyone has something to offer in return. The platform matches members by what they can give and what they want to learn, handles the trade through a credit system, and keeps sessions safe and easy to schedule. The end-to-end flow is designed across 12 hi-fi screens — onboarding, search & browse, skill detail, reviews, chat, booking, profile, and listing — plus three explored directions for the home screen.",
     features: [
       "Credit-based bartering — earn credits by teaching, spend them on what you need",
       "Skill profiles with verifiable endorsements from past trades",
@@ -85,11 +92,39 @@ const PROJECTS = [
     stack: ["Figma", "User research", "React (planned)", "Supabase (planned)"],
     meta: [
       { label: "Founding product" },
-      { label: "Wireframing" },
+      { label: "Hi-fi UI" },
       { label: "Pre-launch" },
     ],
     links: [
       { label: "Case study", href: "#" },
+    ],
+    shotsLayout: "phone",
+    shotGroups: [
+      {
+        title: "Core flow",
+        shots: [
+          { src: window.__resources?.ss01 || "assets/skillsync/01-splash.png",          label: "Splash" },
+          { src: window.__resources?.ss02 || "assets/skillsync/02-create-account.png",  label: "Create account" },
+          { src: window.__resources?.ss03 || "assets/skillsync/03-login.png",           label: "Log in" },
+          { src: window.__resources?.ss04 || "assets/skillsync/04-pick-skills.png",      label: "Pick your skills" },
+          { src: window.__resources?.ss05 || "assets/skillsync/05-search-browse.png",   label: "Search & browse" },
+          { src: window.__resources?.ss06 || "assets/skillsync/06-skill-detail.png",    label: "Skill detail" },
+          { src: window.__resources?.ss07 || "assets/skillsync/07-reviews.png",         label: "Reviews" },
+          { src: window.__resources?.ss08 || "assets/skillsync/08-notifications.png",   label: "Notifications" },
+          { src: window.__resources?.ss09 || "assets/skillsync/09-chat.png",            label: "Chat" },
+          { src: window.__resources?.ss10 || "assets/skillsync/10-booking.png",         label: "Book a session" },
+          { src: window.__resources?.ss11 || "assets/skillsync/11-profile.png",         label: "Profile" },
+          { src: window.__resources?.ss12 || "assets/skillsync/12-list-a-skill.png",    label: "List a skill" },
+        ],
+      },
+      {
+        title: "Home screen — three directions explored",
+        shots: [
+          { src: window.__resources?.ssHomeA || "assets/skillsync/home-a-social-feed.png",   label: "Social feed" },
+          { src: window.__resources?.ssHomeB || "assets/skillsync/home-b-match-deck.png",    label: "Match deck" },
+          { src: window.__resources?.ssHomeC || "assets/skillsync/home-c-browse-first.png",  label: "Browse-first" },
+        ],
+      },
     ],
     tags: ["Product", "UX", "Marketplace"],
     hue: 200,
@@ -121,7 +156,7 @@ const PROJECTS = [
     links: [
       { label: "GitHub", href: "https://github.com/digislav/The-Infinite-Loops" },
     ],
-    screenshots: [window.__resources?.atsDashboard || "assets/ats-dashboard.png"],
+    screenshots: [window.__resources?.atsDashboard || "/assets/ats-dashboard.png"],
     tags: ["Next.js", "TypeScript", "Supabase"],
     hue: 20,
   },
