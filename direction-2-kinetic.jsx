@@ -200,6 +200,16 @@ const DirectionKinetic = ({ tweaks, initialPage = null, layout = 'desktop', onNa
     .kn-mobile .pd-foot-ctas { width: 100%; flex-wrap: wrap; }
     .kn-mobile .pd-shots { margin-top: 24px; }
     .kn-mobile .pd-shots-head h3 { font-size: 22px; }
+
+    /* Live-demo section mobile overrides */
+    .kn-mobile .pd-demo { padding: 26px 16px 30px; border-radius: 20px; margin-top: 24px; }
+    .kn-mobile .pd-demo-head { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+    .kn-mobile .pd-demo-head h3 { font-size: 24px; white-space: nowrap; }
+    .kn-mobile .pd-demo-tag { font-size: 10px; letter-spacing: .1em; }
+    .kn-mobile .pd-demo-sub { font-size: 14px; margin-bottom: 22px; }
+    .kn-mobile .pd-demo-phone { width: 100%; max-width: 340px; padding: 8px; border-radius: 32px; }
+    .kn-mobile .pd-demo-phone iframe { height: 78vh; max-height: 680px; min-height: 560px; border-radius: 26px; }
+    .kn-mobile .pd-demo-open { width: 100%; justify-content: center; }
   `;
 
   // Scope every selector in the CSS to this instance so dark/light artboards
@@ -207,7 +217,7 @@ const DirectionKinetic = ({ tweaks, initialPage = null, layout = 'desktop', onNa
   // with a class that's actually applied to the root element get compound-
   // scoped (no space); everything else gets a descendant scope.
   const ROOT_CLASSES = /^\.(kn-root|kn-mobile|kn-landing|kn-light|kn-dark)/;
-  const scopedCss = css.replace(/(^|\})\s*([^{}@]+)\{/g, (m, prev, sel) => {
+  const scopedCss = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|\})\s*([^{}@]+)\{/g, (m, prev, sel) => {
     const parts = sel.split(',').map((raw) => {
       const s = raw.trim();
       if (!s) return s;
