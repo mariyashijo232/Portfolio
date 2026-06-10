@@ -87,6 +87,21 @@ const DirectionKineticDetail = ({ project, mode, accent, fp, onBack }) => {
     .pd-phone img { display: block; width: 100%; border-radius: 30px; }
     .pd-phone:hover { transform: translateY(-7px); box-shadow: 0 40px 70px -28px rgba(0,0,0,.8), inset 0 0 0 1.5px rgba(255,255,255,.08); }
 
+    /* Live prototype embed */
+    .pd-demo { margin-top: 36px; background: ${t.card}; border: 1px solid ${t.borderSoft}; border-radius: 24px; padding: 40px 48px 48px; }
+    .pd-demo-head { display:flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; margin-bottom: 8px; }
+    .pd-demo-head h3 { font-family: ${fp.display}; font-weight: ${fp.displayWeight}; font-size: 32px; letter-spacing: -.02em; margin: 0; white-space: nowrap; flex-shrink: 0; }
+    .pd-demo-tag { font-family: ${fp.mono}; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: ${accent}; display:inline-flex; align-items:center; gap: 8px; }
+    .pd-demo-tag::before { content:''; width: 7px; height: 7px; border-radius: 50%; background: ${accent}; box-shadow: 0 0 0 0 ${accent}80; animation: pd-pulse 2s infinite; }
+    @keyframes pd-pulse { 0% { box-shadow: 0 0 0 0 ${accent}66; } 70% { box-shadow: 0 0 0 8px ${accent}00; } 100% { box-shadow: 0 0 0 0 ${accent}00; } }
+    .pd-demo-sub { font-size: 16px; line-height: 1.5; color: ${t.fgMute}; margin: 0 0 32px; max-width: 560px; }
+    .pd-demo-stage { display:flex; justify-content: center; }
+    .pd-demo-phone { position: relative; width: 396px; max-width: 100%; border-radius: 46px; padding: 11px; background: linear-gradient(155deg, #34343a 0%, #1b1b1f 55%, #0e0e10 100%); box-shadow: 0 40px 80px -34px rgba(0,0,0,.78), inset 0 0 0 1.5px rgba(255,255,255,.08); }
+    .pd-demo-phone iframe { display:block; width: 100%; height: 812px; border: 0; border-radius: 36px; background: #000; }
+    .pd-demo-foot { display:flex; justify-content: center; margin-top: 28px; }
+    .pd-demo-open { display:inline-flex; align-items:center; gap: 10px; padding: 11px 20px; border: 1px solid ${t.border}; border-radius: 12px; font-family: ${fp.mono}; font-size: 13px; color: ${t.fg}; text-decoration: none; background: transparent; transition: background .2s, color .2s, border-color .2s; }
+    .pd-demo-open:hover { background: ${t.fg}; color: ${t.bg}; border-color: ${t.fg}; }
+
     /* Lightbox */
     .pd-lightbox { position: fixed; inset: 0; background: #00000099; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display:flex; align-items:center; justify-content:center; padding: 40px; z-index: 100; cursor: zoom-out; animation: pd-fade .18s ease both; }
     .pd-lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 30px 90px #00000080; }
@@ -167,6 +182,27 @@ const DirectionKineticDetail = ({ project, mode, accent, fp, onBack }) => {
           </div>
         </div>
       </div>
+
+      {p.liveDemo && (
+        <div className="pd-demo" data-screen-label="Live prototype">
+          <div className="pd-demo-head">
+            <h3>Live prototype</h3>
+            <span className="pd-demo-tag">Interactive · click through it</span>
+          </div>
+          <p className="pd-demo-sub">The real hi-fi prototype, running inline. Tap through onboarding, browse skills, open a listing, and book a session — exactly as built.</p>
+          <div className="pd-demo-stage">
+            <div className="pd-demo-phone">
+              <iframe src={p.liveDemo} title={`${p.title} interactive prototype`} loading="lazy"></iframe>
+            </div>
+          </div>
+          <div className="pd-demo-foot">
+            <a className="pd-demo-open" href={p.liveDemo} target="_blank" rel="noopener noreferrer">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2v9h9V8M8 2h3v3M11 2L6 7"/></svg>
+              Open full screen
+            </a>
+          </div>
+        </div>
+      )}
 
       {(() => {
         const phone = p.shotsLayout === 'phone';

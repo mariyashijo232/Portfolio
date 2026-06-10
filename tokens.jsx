@@ -99,6 +99,7 @@ const PROJECTS = [
       { label: "Case study", href: "#" },
     ],
     shotsLayout: "phone",
+    liveDemo: "skillsync-prototype.html",
     shotGroups: [
       {
         title: "Core flow",
