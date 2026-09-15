@@ -181,7 +181,7 @@ export const CASES: Record<string, CaseStudy> = {
           rows: [
             ["Access", "Submitting decks by email is easy to lose track of", "Need to score on their phone, live, with no password friction", "Need one place to see everything, not scattered emails"],
             ["Data", "No way to track submission or prize status", "Scores never end up in one clean place", "Averaging scores by hand under time pressure"],
-            ["Sustainability", "—", "—", "Whatever gets built has to be maintainable by non-technical staff"],
+            ["Sustainability", "", "", "Whatever gets built has to be maintainable by non-technical staff"],
           ],
         },
         callout: "How might we replace a manual, error-prone pitch day with one app — built so a nonprofit with no dev team can keep running it themselves?",
