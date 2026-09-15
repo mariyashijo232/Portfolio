@@ -58,7 +58,7 @@ export const WORK: WorkItem[] = [
   {
     slug: "girls-academy",
     title: "Ujima Pitch Portal",
-    kind: "No-code app development",
+    kind: "Application development",
     tag: "Non-profit",
     period: "Jun 2026 — Present",
     place: "Hybrid · Newark, NJ",
