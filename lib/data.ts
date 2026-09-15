@@ -57,20 +57,20 @@ export const WORK: WorkItem[] = [
   },
   {
     slug: "girls-academy",
-    title: "The International Girls Academy",
-    kind: "Application development",
+    title: "Ujima Pitch Portal",
+    kind: "No-code app development",
     tag: "Non-profit",
     period: "Jun 2026 — Present",
     place: "Hybrid · Newark, NJ",
     status: "In progress",
     oneLiner:
-      "Shipping application features for the academy's web platform — turning what staff and students actually need into clean, unfussy front-end.",
+      "Building a no-code portal so IGA can run its student pitch competition, and manage it themselves, long after the internship ends.",
     did: [
-      "Translating requests from non-technical staff into working, responsive UI",
-      "Building and extending features on the academy's application platform",
-      "Keeping every interaction simple enough to need no explanation",
+      "Designed and built a three-role portal (students, judges, admins) in Softr with no custom code",
+      "Replaced a fully manual pitch day process with one app covering submissions, scoring, and prize tracking",
+      "Filtered every decision through whether non-technical IGA staff could maintain it independently",
     ],
-    stack: ["Softr", "Google Sheets", "PM"],
+    stack: ["Softr", "No-code", "Product design"],
     year: "2026",
     slot: "ms-work-academy",
     tint: "sky",
@@ -133,9 +133,17 @@ export const OTHER: OtherItem[] = [
   },
 ];
 
+export interface CasePoint {
+  h: string;
+  p: string;
+}
+
 export interface CaseSection {
   h: string;
   p: string[];
+  table?: { cols: string[]; rows: string[][] };
+  callout?: string;
+  points?: CasePoint[];
 }
 
 export interface CaseMockup {
@@ -154,21 +162,58 @@ export interface CaseStudy {
 
 export const CASES: Record<string, CaseStudy> = {
   "girls-academy": {
-    role: "Application Development Intern",
+    role: "Intern, No-Code App Developer",
     timeline: "6 weeks · Jun 2026 — Present",
     team: "Solo build",
     sections: [
       {
-        h: "Problem",
+        h: "Overview",
         p: [
-          "IGA's pitch competition was run manually: decks by email, paper score sheets, hand-calculated averages, no prize tracking. IGA needed one secure app for three users — students, judges, and admins — built fast, with no custom code.",
+          "IGA's Ujima Business Program teaches students entrepreneurship, leadership, and community responsibility. Each cohort ends with students pitching business ideas to a live panel of judges for seed capital and prizes.",
+          "Running that pitch day was entirely manual: decks came in over email, judges scored on paper, staff tallied averages by hand, and prizes had no tracking. My task was to design and build a single web app to run the whole event — for students, judges, and admins — using no-code tools, so IGA staff could keep running it themselves.",
         ],
       },
       {
-        h: "Solution",
+        h: "The challenge",
+        p: [],
+        table: {
+          cols: ["", "Students", "Judges", "Admins"],
+          rows: [
+            ["Access", "Submitting decks by email is easy to lose track of", "Need to score on their phone, live, with no password friction", "Need one place to see everything, not scattered emails"],
+            ["Data", "No way to track submission or prize status", "Scores never end up in one clean place", "Averaging scores by hand under time pressure"],
+            ["Sustainability", "—", "—", "Whatever gets built has to be maintainable by non-technical staff"],
+          ],
+        },
+        callout: "How might we replace a manual, error-prone pitch day with one app — built so a nonprofit with no dev team can keep running it themselves?",
+      },
+      {
+        h: "Key decisions",
+        p: [],
+        points: [
+          {
+            h: "Chose no-code on purpose, not as a shortcut",
+            p: "As a nonprofit, IGA can't hire a developer to maintain a custom app. Building in Softr means their own staff can edit content, add cohorts, or tweak the rubric without touching code.",
+          },
+          {
+            h: "Softr for the frontend and database",
+            p: "Softr's built-in database holds all four tables (Users, Submissions, Scores, Prizes) and links them relationally, so I didn't need a separate backend tool. Its free tier includes magic link login, so judges can access their scoring panel from a phone with no password to remember — a hard requirement for a live event.",
+          },
+          {
+            h: "Wireframe before build",
+            p: "I mapped all 9 screens the app needed (Login, Student Home, Upload Deck, My Pitch/Prizes, Judge Queue, Scoring Rubric, Admin Leaderboard, Submissions, and Submission Detail) before building anything in Softr.",
+          },
+        ],
+      },
+      {
+        h: "Status",
         p: [
-          "I built the portal in Softr, with Google Sheets as the database. Softr's free tier gave judges password-free magic-link login. Since Sheets can't link tables natively, I used a four-table schema (Users, Submissions, Scores, Prizes) connected by ID matching.",
-          "I mapped all 9 app screens into a build plan before coding started. The schema is finalized and the build is in progress. Still open: confirming with my supervisor whether our Softr tier supports the permissions needed to separate the three user roles.",
+          "Schema and wireframes are finalized; the build is in progress. Still open: confirming with my supervisor whether IGA's Softr tier supports the permission groups needed to properly separate the three user roles.",
+        ],
+      },
+      {
+        h: "Reflection",
+        p: [
+          "The hardest part wasn't picking tools — it was designing around a constraint most projects don't have: whoever inherits this app afterward won't be a developer. Every decision, from the platform choice to the schema shape, was filtered through whether IGA staff could maintain it in six months, not just whether it worked now.",
         ],
       },
     ],
@@ -181,9 +226,9 @@ export const CASES: Record<string, CaseStudy> = {
       ],
     },
     takeaways: [
-      "Worked around Sheets' lack of relational linking with an ID-matching pattern.",
-      "Free-tier features (like magic links) can outweigh paid \"nicer\" options.",
-      "Solo, six-week timeline meant locking the schema and wireframes early.",
+      "Chose no-code on purpose — Softr lets non-technical IGA staff maintain and extend the app after the internship ends.",
+      "Free-tier features like magic links can outperform paid options when they solve a real constraint (no-friction judge access on a live event day).",
+      "Designing for maintainability meant filtering every decision through whether staff could own it in six months, not just whether it worked now.",
     ],
   },
   "productivity-app": {

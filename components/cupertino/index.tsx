@@ -148,6 +148,29 @@ export default function Cupertino({ theme, setTheme, page }: Props) {
                 <div key={s.h} id={'sec-' + s.h.toLowerCase().replace(/[^a-z]+/g, '-')} data-reveal>
                   <h2 className="cu-bh">{s.h}</h2>
                   {s.p.map((t, k) => <p key={k}>{t}</p>)}
+                  {s.table && (
+                    <table className="cu-cs-table">
+                      <thead>
+                        <tr>{s.table.cols.map((col) => <th key={col}>{col}</th>)}</tr>
+                      </thead>
+                      <tbody>
+                        {s.table.rows.map((row, i) => (
+                          <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                  {s.callout && <blockquote className="cu-cs-callout">{s.callout}</blockquote>}
+                  {s.points && (
+                    <div className="cu-cs-points">
+                      {s.points.map((pt) => (
+                        <div className="cu-cs-point" key={pt.h}>
+                          <h4>{pt.h}</h4>
+                          <p>{pt.p}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
