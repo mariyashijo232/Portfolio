@@ -138,9 +138,12 @@ export interface CasePoint {
   p: string;
 }
 
+export type CaseText = string | { b: string; t: string };
+
 export interface CaseSection {
   h: string;
-  p: string[];
+  p: CaseText[];
+  research?: boolean;
   table?: { cols: string[]; rows: string[][] };
   callout?: string;
   points?: CasePoint[];
@@ -151,14 +154,108 @@ export interface CaseMockup {
   shots: { label: string; note: string; slot: string; img?: string }[];
 }
 
+export type MatrixState = 'y' | 'p' | 'n' | 'o';
+export type MatrixCell = MatrixState | [MatrixState, string];
+
+export interface CaseResearch {
+  map: {
+    sub: string;
+    alt: string;
+    points: { n: string; x: number; y: number; c: string; end?: boolean }[];
+    legend: [string, string, boolean?][];
+  };
+  prices: {
+    sub: string;
+    rows: { n: string; w: number; free?: boolean; p: string; note: string }[];
+  };
+  overview: { sub: string; cols: string[]; rows: string[][] };
+  matrix: {
+    sub: string;
+    cols: string[];
+    rows: [string, ...MatrixCell[]][];
+    legend: [MatrixState, string][];
+  };
+  limits: string;
+  sources: [string, string][];
+}
+
 export interface CaseStudy {
   role: string;
   timeline: string;
   team: string;
   sections: CaseSection[];
   mockups?: CaseMockup;
+  research?: CaseResearch;
   takeaways: string[];
 }
+
+// Data behind the Blocked competitor-research visuals.
+// Matrix cells: "y" yes · "p" partial · "n" no · "o" open — or [state, label] to override the label.
+export const BLOCKED_RESEARCH: CaseResearch = {
+  map: {
+    sub: "Placement is my judgment from each product's features, not measured data. Blocked is aiming for the empty top-right corner.",
+    points: [
+      { n: "Sunsama", x: 268, y: 365, c: "blue" },
+      { n: "Motion", x: 169, y: 417, c: "blue" },
+      { n: "Todoist", x: 400, y: 331, c: "blue" },
+      { n: "Finch", x: 189, y: 125, c: "teal" },
+      { n: "Habitica", x: 347, y: 168, c: "teal" },
+      { n: "Notion", x: 677, y: 224, c: "amber", end: true },
+    ],
+    legend: [["blue", "Planners and task managers"], ["teal", "Habit and self-care apps"], ["amber", "Flexible workspace"], ["violet", "Blocked (target)", true]],
+    alt: "Positioning map. Horizontal axis runs from fixed structure to fully customizable. Vertical axis runs from work and tasks to whole life. Motion, Sunsama and Todoist sit low on the left and middle. Finch and Habitica sit higher on the left. Notion sits far right at mid height. Blocked is planned for the top right.",
+  },
+  prices: {
+    sub: "Cheapest individual paid plan, on monthly billing. Finch is left out because its Plus pricing varies widely by region and billing period.",
+    rows: [
+      { n: "Habitica", w: 10, free: true, p: "$4.99", note: "a month, optional. $47.99 a year. Free plan has the full game." },
+      { n: "Todoist", w: 14, free: true, p: "$7", note: "a month for Pro, or $5 billed yearly. Free plan capped at 5 projects." },
+      { n: "Notion", w: 24, free: true, p: "$12", note: "a month for Plus. Free for students with a school email." },
+      { n: "Sunsama", w: 50, p: "$25", note: "a month, or $20 billed yearly. 14-day trial, no free plan." },
+      { n: "Motion", w: 98, p: "$49", note: "a month, or $29 billed yearly, plus charges for heavy AI-credit use. 7-day trial needs a card." },
+    ],
+  },
+  overview: {
+    sub: "What each tool is for, what it costs, and where it falls short for a student who wants balance.",
+    cols: ["Tool", "Built for", "Free option", "AI", "Where it falls short"],
+    rows: [
+      ["Notion", "Flexible workspace for notes, databases, and wikis", "Yes. Free Plus plan for students with a school email", "Notion AI, limited trial on the free plan", "Blank canvas. Life tracking comes from templates people buy, and setup takes real effort."],
+      ["Sunsama", "Guided daily planning for busy professionals", "No. 14-day trial", "Yes, on the single individual plan", "Focused on work and calendars. Priced well above a student budget. No life-area tracking."],
+      ["Motion", "AI that auto-schedules tasks and projects around meetings", "No. 7-day trial with a card", "Core feature, metered by credits", "Built for work and teams. Cost can climb with heavy AI use."],
+      ["Todoist", "Fast, simple task lists", "Yes. 5 personal projects", "Yes, on Pro", "Tasks, not life areas. The 5-project cap is reached quickly once you split school, health, and social goals."],
+      ["Finch", "Self-care habits with a virtual pet bird", "Yes. Plus adds customization and deeper tracking", "Not found", "Wellness only. No academics, career, or time scheduling."],
+      ["Habitica", "Habits and to-dos as a role-playing game", "Yes. Optional subscription", "No", "The game style won't suit everyone. No time allocation or balance view."],
+    ],
+  },
+  matrix: {
+    sub: "Blocked's column is my current plan. \u201cOpen\u201d marks things I haven't decided yet.",
+    cols: ["Notion", "Sunsama", "Motion", "Todoist", "Finch", "Habitica", "Blocked"],
+    rows: [
+      ["Tracks life areas beyond tasks", "p", "n", "n", "p", "p", "p", "y"],
+      ["Customizable blocks and layout", "y", "n", "n", "p", "p", "p", "y"],
+      ["Schedules your time", "p", "y", "y", "p", "n", "n", ["p", "Manual in v1"]],
+      ["AI features", "y", "y", "y", "y", "n", "n", ["o", "Later"]],
+      ["Games and rewards", "n", "n", "n", "n", "y", "y", ["o", "Open"]],
+      ["Reflection or check-ins", "p", "y", "n", "n", "y", "n", ["y", "Weekly survey"]],
+      ["Free for students", "y", "n", "n", ["p", "Limited"], "y", "y", ["o", "Open"]],
+      ["Built for students", "p", "n", "n", "n", "n", "n", "y"],
+    ],
+    legend: [["y", "Yes"], ["p", "Partial or limited"], ["n", "No or not found"], ["o", "Not built yet or undecided"]],
+  },
+  limits: "Some pricing comes from Morgen's blog, and Morgen sells a rival planner, so confirm numbers on the official pages before quoting them. Feature cells combine these pages with general product knowledge. I didn't mine app-store reviews, so the complaint evidence is thin: one grad-student post about Notion being too complex, and the existence of the template market. Five short chats with students would firm it up.",
+  sources: [
+    ["Sunsama pricing, Morgen", "https://www.morgen.so/blog-posts/sunsama-pricing"],
+    ["Motion pricing, Morgen", "https://morgen.so/blog-posts/motion-pricing"],
+    ["Todoist pricing, Hack'celeration", "https://hackceleration.com/labs/todoist-pricing"],
+    ["Notion free plan, CostBench", "https://www.costbench.com/software/project-management/notion/free-plan/"],
+    ["Notion for Education deal, Subger", "https://subger.com/en/deal/notion"],
+    ["Finch App Store data, App Pricing Lab", "https://apppricinglab.com/app/apple/1528595748"],
+    ["Finch overview, Internet Matters", "https://www.internetmatters.org/advice/apps-and-platforms/wellbeing/finch/"],
+    ["Habitica, App Store listing", "https://apps.apple.com/tr/app/id994882113"],
+    ["Student Life OS Notion template, Gumroad", "https://organizeddashboard.gumroad.com/l/qkyzwu"],
+    ["Grad student on Notion being too complex, Lemon8", "https://www.lemon8-app.com/@ryanne_erin/7434627037299638839?region=us"],
+  ],
+};
 
 export const CASES: Record<string, CaseStudy> = {
   "girls-academy": {
@@ -235,11 +332,31 @@ export const CASES: Record<string, CaseStudy> = {
     role: "Product design & build",
     timeline: "2026 · In design",
     team: "Solo",
+    research: BLOCKED_RESEARCH,
     sections: [
       {
         h: "Problem",
         p: [
           "Students juggle goals across many parts of life (academics, health, relationships, career) but tools like calendars and to-do lists only track tasks, not balance. Non-academic goals quietly get dropped when things get busy, and there's no easy way to see it happening or fix it.",
+        ],
+      },
+      {
+        h: "Competitor research",
+        research: true,
+        p: [
+          "I compared six tools a student might use instead of Blocked: Notion, Sunsama, Motion, Todoist, Finch, and Habitica. Prices checked Sept 21, 2026.",
+          { b: "The gap is setup, not features.", t: "Notion already does what Blocked plans, and students get its Plus plan free with a school email. Yet people sell ready-made student-life templates for roughly $2 to $27, so an opinionated, ready-to-use version is the opening." },
+          { b: "The paid planners are built for work.", t: "Sunsama ($20–25/mo) and Motion ($29–49/mo) center on calendars and tasks, not health or relationships, and neither has a free plan." },
+          { b: "Free is the price to beat.", t: "Notion for students, Todoist, Finch, and Habitica all have a free tier. Finch holds a 4.9-star rating across about 656K App Store reviews, so a gentle, motivating habit app clearly has an audience." },
+        ],
+      },
+      {
+        h: "How it shaped Blocked",
+        p: [
+          { b: "Sell Notion's flexibility without the setup.", t: "A handful of ready-made life-aspect blocks gets a new user set up in minutes." },
+          { b: "Keep the core free.", t: "Every close rival has a free path for students. Any paid tier waits for later extras like AI." },
+          { b: "Stay out of AI for now.", t: "The AI planners focus on work calendars. Allocating time across life areas is something none of the six do, so it's worth doing well later." },
+          { b: "Borrow lightly from Finch and Habitica.", t: "Small rewards and check-ins keep people coming back, and the weekly survey fits the reflection habit Sunsama and Finch build around." },
         ],
       },
       {
@@ -252,9 +369,9 @@ export const CASES: Record<string, CaseStudy> = {
     mockups: {
       lead: "Screens go up as the build progresses:",
       shots: [
-        { label: "Onboarding", note: "Schedule and weekly targets", slot: "blk-onboarding" },
-        { label: "Dashboard", note: "Blocks the student chose", slot: "blk-dashboard" },
-        { label: "Balance", note: "Where the week actually went", slot: "blk-balance" },
+        { label: "Dashboard", note: "Blocks the student chose", slot: "blk-dashboard", img: "/assets/blocked/01-dashboard-week-1.png" },
+        { label: "Balance", note: "Where the week actually went", slot: "blk-balance", img: "/assets/blocked/02-balance.png" },
+        { label: "Weekly check-in", note: "Sunday survey on how the week felt", slot: "blk-checkin", img: "/assets/blocked/03-weekly-check-in.png" },
       ],
     },
     takeaways: [],

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -8,6 +8,7 @@ import { PROFILE, WORK, OTHER, CASES, EXPERIENCE, ABOUT, LIFE, TOOLBOX, AURA_BY_
 import { useReveal } from '@/hooks/useReveal';
 import { SunIcon, MoonIcon, ArrowIcon } from '@/components/icons';
 import type { PageInfo } from '@/components/SiteWrapper';
+import ResearchVisuals from './ResearchVisuals';
 
 interface Props {
   theme: 'light' | 'dark';
@@ -143,37 +144,40 @@ export default function Cupertino({ theme, setTheme, page }: Props) {
           <SectionRail items={railItems} />
 
           <section className="cu-sec cu-cs-first" style={{ paddingTop: 'clamp(52px,8vh,96px)' }}>
-            <div className="cu-body" style={{ marginTop: 0 }}>
-              {c.sections.map((s) => (
-                <div key={s.h} id={'sec-' + s.h.toLowerCase().replace(/[^a-z]+/g, '-')} data-reveal>
-                  <h2 className="cu-bh">{s.h}</h2>
-                  {s.p.map((t, k) => <p key={k}>{t}</p>)}
-                  {s.table && (
-                    <table className="cu-cs-table">
-                      <thead>
-                        <tr>{s.table.cols.map((col) => <th key={col}>{col}</th>)}</tr>
-                      </thead>
-                      <tbody>
-                        {s.table.rows.map((row, i) => (
-                          <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
+            {c.sections.map((s, i) => (
+              <Fragment key={s.h}>
+                <div className="cu-body" style={{ marginTop: i === 0 ? 0 : 'clamp(30px,4vw,46px)' }}>
+                  <div id={'sec-' + s.h.toLowerCase().replace(/[^a-z]+/g, '-')} data-reveal>
+                    <h2 className="cu-bh">{s.h}</h2>
+                    {s.p.map((t, k) => (typeof t === 'string' ? <p key={k}>{t}</p> : <p key={k}><b>{t.b}</b> {t.t}</p>))}
+                    {s.table && (
+                      <table className="cu-cs-table">
+                        <thead>
+                          <tr>{s.table.cols.map((col) => <th key={col}>{col}</th>)}</tr>
+                        </thead>
+                        <tbody>
+                          {s.table.rows.map((row, ri) => (
+                            <tr key={ri}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                    {s.callout && <blockquote className="cu-cs-callout">{s.callout}</blockquote>}
+                    {s.points && (
+                      <div className="cu-cs-points">
+                        {s.points.map((pt) => (
+                          <div className="cu-cs-point" key={pt.h}>
+                            <h4>{pt.h}</h4>
+                            <p>{pt.p}</p>
+                          </div>
                         ))}
-                      </tbody>
-                    </table>
-                  )}
-                  {s.callout && <blockquote className="cu-cs-callout">{s.callout}</blockquote>}
-                  {s.points && (
-                    <div className="cu-cs-points">
-                      {s.points.map((pt) => (
-                        <div className="cu-cs-point" key={pt.h}>
-                          <h4>{pt.h}</h4>
-                          <p>{pt.p}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              ))}
-            </div>
+                {s.research && c.research && <ResearchVisuals r={c.research} />}
+              </Fragment>
+            ))}
 
             {c.mockups && (
               <div className="cu-mock" id="sec-mockups" data-reveal>
