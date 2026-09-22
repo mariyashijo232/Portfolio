@@ -319,7 +319,7 @@ export default function Cupertino({ theme, setTheme, page }: Props) {
                       alt={it.title}
                       fill
                       sizes="(max-width:760px) 84vw, (max-width:1280px) 50vw, 600px"
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'cover', objectPosition: (it as typeof WORK[0]).coverPosition }}
                       priority={false}
                     />
                   ) : (

@@ -31,6 +31,7 @@ export interface WorkItem {
   slot: string;
   tint: string;
   cover?: string;
+  coverPosition?: string;
   soon?: boolean;
 }
 
@@ -90,6 +91,8 @@ export const WORK: WorkItem[] = [
     year: "2026",
     slot: "ms-work-productivity",
     tint: "peach",
+    cover: "/assets/blocked-cover.png",
+    coverPosition: "left center",
     soon: true,
   },
 ];
